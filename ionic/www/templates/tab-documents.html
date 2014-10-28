@@ -1,0 +1,13 @@
+<ion-view title="Documents">
+  <ion-content>
+    <div class="list">
+      <a class="item item-thumbnail-left item-button-right" ng-repeat="document in documents" href="#/tab/document/{{document.Id}}">
+        <img ng-repeat="image in document.Images" ng-src="{{image.Thumbs.TinySrc}}" />
+        {{document.Name}}
+        <button ng-repeat="attachment in document.Attachments" class="button button-positive" ng-click="downloadAttachment(attachment)">
+          <i class="icon ion-ios7-download"></i>
+        </button>
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

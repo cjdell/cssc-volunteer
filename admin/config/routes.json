@@ -1,0 +1,80 @@
+{
+  "auth": {
+    "abstract": true,
+    "templateUrl": "views/layouts/auth.html",
+    "url": "/auth"
+  },
+  "auth.register": {
+    "controller": "RegisterController",
+    "templateUrl": "views/auth/register.html",
+    "url": "/register"
+  },
+  "auth.sign-in": {
+    "controller": "SignInController",
+    "templateUrl": "views/auth/sign-in.html",
+    "url": "/sign-in/:attemptedStateName/:attemptedStateParams"
+  },
+  "dashboard": {
+    "templateUrl": "views/dashboard/index.html",
+    "url": "/"
+  },
+  "records": {
+    "abstract": true,
+    "allow": [
+      "Admin",
+      "Business"
+    ],
+    "templateUrl": "views/layouts/records.html",
+    "url": "/records"
+  },
+  "records.users": {
+    "abstract": true,
+    "allow": [
+      "Admin"
+    ],
+    "controller": "UsersController",
+    "templateUrl": "views/users/index.html",
+    "url": "/users"
+  },
+  "records.users.new": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "UserController",
+    "templateUrl": "views/users/view.html",
+    "url": "/new"
+  },
+  "records.users.view": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "UserController",
+    "templateUrl": "views/users/view.html",
+    "url": "/{id:[0-9]+}"
+  },
+  "records.documents": {
+    "abstract": true,
+    "allow": [
+      "Admin"
+    ],
+    "controller": "DocumentsController",
+    "templateUrl": "views/documents/index.html",
+    "url": "/documents"
+  },
+  "records.documents.new": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "DocumentController",
+    "templateUrl": "views/documents/view.html",
+    "url": "/new"
+  },
+  "records.documents.view": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "DocumentController",
+    "templateUrl": "views/documents/view.html",
+    "url": "/{id:[0-9]+}"
+  }
+}
