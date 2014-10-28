@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "pure": "~0.5.0",
-    "tinymce": "~4.1.6"
+    "tinymce": "~4.1.6",
+    "observe-js": "~0.4.2"
   }
 }
