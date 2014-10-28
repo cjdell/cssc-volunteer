@@ -72,6 +72,8 @@ func (self *DocumentService) Insert(documentChanges DocumentChanges) (*DocumentI
 		return nil, err
 	}
 
+	documentChanges.Id = id
+
 	// Need ID before this can work
 	if err = self.processChanges(documentChanges); err != nil {
 		return nil, err

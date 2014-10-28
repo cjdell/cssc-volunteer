@@ -33,7 +33,7 @@ func (self AppHandlers) UploadHandler() AppHandler {
 			return err
 		}
 
-		time.Sleep(5000 * time.Millisecond)
+		//time.Sleep(5000 * time.Millisecond)
 
 		_, err = fo.Write(body)
 
