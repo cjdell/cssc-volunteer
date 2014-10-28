@@ -1,7 +1,10 @@
 /* APP
 -------------------------------- */
-var angular = require('angular'),
-  router = require('angular-ui-router'),
+require('angular');
+
+var angular = window.angular;
+
+var router = require('angular-ui-router'),
   ngDialog = require('./lib/ngDialog');
 
 window._ = require('underscore'); // Restangular wants _ in global scope

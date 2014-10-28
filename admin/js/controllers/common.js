@@ -97,26 +97,26 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
 
     ctrl.update = function() {
       $scope.$emitp('item-updating', $scope.record)
-      .then(function(results) {
-        return Api.Put($scope.record);
-      })
-      .then(ctrl.saved, ctrl.failed);
+        .then(function(results) {
+          return Api.Put($scope.record);
+        })
+        .then(ctrl.saved, ctrl.failed);
     };
 
     ctrl.insert = function() {
       $scope.$emitp('item-inserting', $scope.record)
-      .then(function(results) {
-        return Api.Post($scope.record);
-      })
-      .then(ctrl.saved, ctrl.failed);
+        .then(function(results) {
+          return Api.Post($scope.record);
+        })
+        .then(ctrl.saved, ctrl.failed);
     };
 
     ctrl.delete = function() {
       $scope.$emitp('item-deleting', $scope.record)
-      .then(function(results) {
-        return Api.Delete($scope.record);
-      })
-      .then(ctrl.saved, ctrl.failed);
+        .then(function(results) {
+          return Api.Delete($scope.record);
+        })
+        .then(ctrl.saved, ctrl.failed);
     };
 
     // Callbacks are declared privately
@@ -172,7 +172,9 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
     $scope.delete = () => ctrl.delete();
 
     function beginObserve(record) {
-      record.Changes = { Fields: [] };
+      record.Changes = {
+        Fields: []
+      };
 
       Object.observe(record, function(changes) {
         record.Changes.Fields.push(changes[0].name);

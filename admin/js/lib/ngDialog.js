@@ -355,6 +355,6 @@ var moduleName = 'ngDialog';
     }
   ]);
 
-})(window, require('angular'));
+})(window, window.angular);
 
 module.exports = moduleName;
