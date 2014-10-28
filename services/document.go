@@ -67,11 +67,12 @@ func (self *DocumentService) Insert(documentChanges DocumentChanges) (*DocumentI
 
 	documentChanges.Version = 1
 
-	if err = self.processChanges(documentChanges); err != nil {
+	if id, err = self.persister.Insert(documentChanges.Document); err != nil {
 		return nil, err
 	}
 
-	if id, err = self.persister.Insert(documentChanges.Document); err != nil {
+	// Need ID before this can work
+	if err = self.processChanges(documentChanges); err != nil {
 		return nil, err
 	}
 
