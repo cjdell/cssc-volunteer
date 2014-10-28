@@ -45,16 +45,6 @@ func startServer(db *sqlx.DB) {
 
 	http.Handle("/auth", authApiServer)
 
-	// Configure JSON-RPC based API (For everything else, requires API Key)
-	apiServer := rpc.NewServer()
-
-	apiServer.RegisterCodec(json.NewCodec(), "application/json")
-	apiServer.RegisterService(api.NewUserApi(db), "")
-	//apiServer.RegisterService(api.NewDocumentApi(db), "")
-
-	// Firewall the API to only authenticated users
-	http.Handle("/api", handlers.CheckUser(apiServer, db))
-
 	apiRouter := mux.NewRouter()
 
 	documentApi := http.StripPrefix("/documents", api.NewDocumentApi(db))
@@ -67,7 +57,7 @@ func startServer(db *sqlx.DB) {
 	apiRouter.Handle("/users", userApi)
 	apiRouter.Handle("/users/{id:[0-9]+}", userApi)
 
-	http.Handle("/api/", http.StripPrefix("/api", apiRouter))
+	http.Handle("/api/", http.StripPrefix("/api", handlers.CheckUser(apiRouter, db, false)))
 
 	// Configure handlers
 	dynamicHandler := mux.NewRouter()

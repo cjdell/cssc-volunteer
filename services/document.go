@@ -14,6 +14,7 @@ type DocumentService struct {
 // A document with images
 type DocumentInfo struct {
 	*entity.Document
+
 	Images      []*Image
 	Attachments []*Attachment
 }

@@ -23,9 +23,16 @@ func NewDocumentApi(db *sqlx.DB) http.Handler {
 
 	handler := &rest.ResourceHandler{}
 
-	wrap := func(handler documentHandler, db *sqlx.DB) rest.HandlerFunc {
+	wrap := func(handler documentHandler, db *sqlx.DB, requireUser bool) rest.HandlerFunc {
 		return rest.HandlerFunc(func(w rest.ResponseWriter, r *rest.Request) {
-			service := services.NewDocumentService(db, GetUser(r.Request))
+			user := GetUser(r.Request)
+
+			if requireUser && user == nil {
+				rest.Error(w, "Authentication required", 401)
+				return
+			}
+
+			service := services.NewDocumentService(db, user)
 
 			if err := handler(service, documentResponse{w}, documentRequest{r}); err != nil {
 				rest.Error(w, err.Error(), http.StatusInternalServerError)
@@ -34,11 +41,11 @@ func NewDocumentApi(db *sqlx.DB) http.Handler {
 	}
 
 	err := handler.SetRoutes(
-		&rest.Route{"GET", "/", wrap(documentHandler(api.getAll), db)},
-		&rest.Route{"GET", "/:id", wrap(documentHandler(api.getOne), db)},
-		&rest.Route{"POST", "/", wrap(documentHandler(api.post), db)},
-		&rest.Route{"PUT", "/:id", wrap(documentHandler(api.put), db)},
-		&rest.Route{"DELETE", "/:id", wrap(documentHandler(api.delete), db)},
+		&rest.Route{"GET", "/", wrap(documentHandler(api.getAll), db, false)},
+		&rest.Route{"GET", "/:id", wrap(documentHandler(api.getOne), db, false)},
+		&rest.Route{"POST", "/", wrap(documentHandler(api.post), db, true)},
+		&rest.Route{"PUT", "/:id", wrap(documentHandler(api.put), db, true)},
+		&rest.Route{"DELETE", "/:id", wrap(documentHandler(api.delete), db, true)},
 	)
 
 	if err != nil {

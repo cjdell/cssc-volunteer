@@ -63,3 +63,5 @@ app.config(require('./config/restangular'));
 
 // Manual Angular bootstrap call, less magic
 angular.bootstrap(window.document.body, ['go-angular-starter']);
+
+setInterval(window.Platform.performMicrotaskCheckpoint, 250);

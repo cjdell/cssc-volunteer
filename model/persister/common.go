@@ -93,10 +93,19 @@ func (self commonPersister) getOne(ent entity.Entity, where string, params Query
 
 	defer rows.Close()
 
-	rows.Next()
+	next := rows.Next()
+
+	if !next {
+		return NotFoundError{}
+	}
 
 	return rows.StructScan(ent)
 }
+
+type NotFoundError struct {
+}
+
+func (NotFoundError) Error() string { return "Not found" }
 
 func (self commonPersister) insert(ent entity.Entity) (int64, error) {
 	var (

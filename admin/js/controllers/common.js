@@ -176,9 +176,21 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
         Fields: []
       };
 
-      Object.observe(record, function(changes) {
-        record.Changes.Fields.push(changes[0].name);
+      var observer = new ObjectObserver(record);
+
+      observer.open(function(added, removed, changed, getOldValueFn) {
+        Object.keys(added).forEach(function(property) {
+          record.Changes.Fields.push(property);
+        });
+
+        Object.keys(changed).forEach(function(property) {
+          record.Changes.Fields.push(property);
+        });
       });
+
+      // Object.observe(record, function(changes) {
+      //   record.Changes.Fields.push(changes[0].name);
+      // });
     }
   }
 ];
