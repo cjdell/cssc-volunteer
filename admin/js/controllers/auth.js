@@ -59,7 +59,7 @@ var RegisterController = ['$scope', '$state', '$stateParams', 'AuthApi',
         return;
       }
 
-      AuthApi.Register(user.email, user.password).then(registerSuccessful, registerFailed);
+      AuthApi.signUp(user.email, user.password).then(registerSuccessful, registerFailed);
     };
 
     function registerSuccessful() {

@@ -5,7 +5,7 @@ var ListController = ['$scope', '$q', 'Api',
   function($scope, $q, Api) {
     var args = Validate.validate(arguments, ['object', 'object', {
       EntityNames: 'object',
-      GetAll: 'function'
+      getAll: 'function'
     }]);
 
     if (!args.isValid()) {
@@ -21,7 +21,7 @@ var ListController = ['$scope', '$q', 'Api',
     };
 
     ctrl.load = function() {
-      Api.GetAll().then(ctrl.loaded, ctrl.failed);
+      Api.getAll().then(ctrl.loaded, ctrl.failed);
     };
 
     ctrl.loaded = function(reply) {
@@ -46,7 +46,7 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
   function($scope, $q, $state, $stateParams, Api) {
     var args = Validate.validate(arguments, ['object', 'object', 'object', 'object', {
       EntityNames: 'object',
-      GetOne: 'function'
+      getOne: 'function'
     }]);
 
     if (!args.isValid()) {
@@ -66,7 +66,7 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
     };
 
     ctrl.load = function(id) {
-      Api.GetOne(id).then(ctrl.loaded, ctrl.failed);
+      Api.getOne(id).then(ctrl.loaded, ctrl.failed);
     };
 
     ctrl.blank = function() {
@@ -98,7 +98,7 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
     ctrl.update = function() {
       $scope.$emitp('item-updating', $scope.record)
         .then(function(results) {
-          return Api.Put($scope.record);
+          return Api.put($scope.record);
         })
         .then(ctrl.saved, ctrl.failed);
     };
@@ -106,7 +106,7 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
     ctrl.insert = function() {
       $scope.$emitp('item-inserting', $scope.record)
         .then(function(results) {
-          return Api.Post($scope.record);
+          return Api.post($scope.record);
         })
         .then(ctrl.saved, ctrl.failed);
     };
@@ -114,7 +114,7 @@ var ItemController = ['$scope', '$q', '$state', '$stateParams', 'Api',
     ctrl.delete = function() {
       $scope.$emitp('item-deleting', $scope.record)
         .then(function(results) {
-          return Api.Delete($scope.record);
+          return Api.delete($scope.record);
         })
         .then(ctrl.saved, ctrl.failed);
     };

@@ -3,7 +3,6 @@ package services
 import (
 	"cssc/model/entity"
 	"cssc/model/persister"
-	"github.com/jmoiron/sqlx"
 )
 
 type DocumentService struct {
@@ -11,7 +10,7 @@ type DocumentService struct {
 	user      *entity.User
 }
 
-// A document with images
+// A struct composed of the record coupled with additional computed information
 type DocumentInfo struct {
 	*entity.Document
 
@@ -19,7 +18,7 @@ type DocumentInfo struct {
 	Attachments []*Attachment
 }
 
-// Purpose of this is to hold additional modifications that don't fit into the record data structure
+// A struct to hold additional modifications that don't fit into the record data structure
 type DocumentChanges struct {
 	*entity.Document
 
@@ -30,11 +29,11 @@ type DocumentChanges struct {
 	}
 }
 
-func NewDocumentService(db *sqlx.DB, user *entity.User) *DocumentService {
+func NewDocumentService(db persister.DB, user *entity.User) *DocumentService {
 	return &DocumentService{persister.NewDocumentPersister(db), user}
 }
 
-func (self *DocumentService) GetDocuments(limit *persister.Limit) ([]*DocumentInfo, error) {
+func (self *DocumentService) GetAll(limit *persister.Limit) ([]*DocumentInfo, error) {
 	var err error
 	var documents []*entity.Document
 
@@ -45,13 +44,13 @@ func (self *DocumentService) GetDocuments(limit *persister.Limit) ([]*DocumentIn
 	documentInfos := make([]*DocumentInfo, len(documents), len(documents))
 
 	for i, document := range documents {
-		documentInfos[i], _ = self.getDocumentInfo(document)
+		documentInfos[i], _ = self.documentInfo(document)
 	}
 
 	return documentInfos, nil
 }
 
-func (self *DocumentService) GetDocumentById(id int64) (*DocumentInfo, error) {
+func (self *DocumentService) GetOne(id int64) (*DocumentInfo, error) {
 	var err error
 	var document *entity.Document
 
@@ -59,10 +58,10 @@ func (self *DocumentService) GetDocumentById(id int64) (*DocumentInfo, error) {
 		return nil, err
 	}
 
-	return self.getDocumentInfo(document)
+	return self.documentInfo(document)
 }
 
-func (self *DocumentService) Insert(documentChanges DocumentChanges) (*DocumentInfo, error) {
+func (self *DocumentService) Insert(documentChanges *DocumentChanges) (*DocumentInfo, error) {
 	var err error
 	var id int64
 
@@ -79,10 +78,10 @@ func (self *DocumentService) Insert(documentChanges DocumentChanges) (*DocumentI
 		return nil, err
 	}
 
-	return self.GetDocumentById(id)
+	return self.GetOne(id)
 }
 
-func (self *DocumentService) Update(documentChanges DocumentChanges) (*DocumentInfo, error) {
+func (self *DocumentService) Update(documentChanges *DocumentChanges) (*DocumentInfo, error) {
 	var err error
 	var document *entity.Document
 
@@ -90,28 +89,30 @@ func (self *DocumentService) Update(documentChanges DocumentChanges) (*DocumentI
 		return nil, err
 	}
 
-	document.Update(documentChanges.Document, documentChanges.Changes.Fields)
+	if err = document.Merge(documentChanges.Document, documentChanges.Changes.Fields); err != nil {
+		return nil, err
+	}
 
 	if documentChanges.Changes.NewAttachmentFileName != "" {
 		document.Version++
-	}
-
-	if err = self.processChanges(documentChanges); err != nil {
-		return nil, err
 	}
 
 	if err = self.persister.Update(document); err != nil {
 		return nil, err
 	}
 
-	return self.GetDocumentById(document.Id)
+	if err = self.processChanges(documentChanges); err != nil {
+		return nil, err
+	}
+
+	return self.GetOne(document.Id)
 }
 
 func (self *DocumentService) Delete(id int64) error {
 	return self.persister.Delete(id)
 }
 
-func (self *DocumentService) getDocumentInfo(document *entity.Document) (*DocumentInfo, error) {
+func (self *DocumentService) documentInfo(document *entity.Document) (*DocumentInfo, error) {
 	images, err := GetImages(document)
 
 	if err != nil {
@@ -127,7 +128,7 @@ func (self *DocumentService) getDocumentInfo(document *entity.Document) (*Docume
 	return &DocumentInfo{document, images, attachments}, nil
 }
 
-func (self *DocumentService) processChanges(documentChanges DocumentChanges) error {
+func (self *DocumentService) processChanges(documentChanges *DocumentChanges) error {
 	if documentChanges.Changes.NewAttachmentFileName != "" {
 		if err := AssignAttachment(documentChanges, documentChanges.Changes.NewAttachmentFileName, "document"); err != nil {
 			return err

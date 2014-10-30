@@ -1,45 +1,79 @@
 package api
 
 import (
+	"cssc/model/persister"
 	"cssc/services"
+	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jmoiron/sqlx"
+	"log"
 	"net/http"
 )
 
-type AuthApi struct {
-	authService *services.AuthService
+type (
+	authApi struct{}
+
+	authRequest  struct{ *rest.Request }
+	authResponse struct{ rest.ResponseWriter }
+
+	authAction func(*services.AuthService, authResponse, authRequest) error
+)
+
+func NewAuthApi(db *sqlx.DB) http.Handler {
+	api := authApi{}
+
+	handler := &rest.ResourceHandler{}
+
+	wrap := func(action authAction, db *sqlx.DB) rest.HandlerFunc {
+		return transactionWrap(db, func(w rest.ResponseWriter, r *rest.Request, db persister.DB) error {
+			service := services.NewAuthService(db)
+
+			return action(service, authResponse{w}, authRequest{r})
+		})
+	}
+
+	err := handler.SetRoutes(
+		&rest.Route{"POST", "/sign-in", wrap(authAction(api.signIn), db)},
+		&rest.Route{"POST", "/sign-up", wrap(authAction(api.signUp), db)},
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return handler
 }
 
-func NewAuthApi(db *sqlx.DB) *AuthApi {
-	return &AuthApi{services.NewAuthService(db)}
+func (authApi) signIn(service *services.AuthService, res authResponse, req authRequest) error {
+	sireq := req.SignInRequest()
+
+	result, err := service.SignIn(sireq.Email, sireq.Password)
+
+	if err != nil {
+		return err
+	}
+
+	return res.WriteJson(result)
 }
 
-type AuthSignInArgs struct {
-	Email    string
-	Password string
-}
+func (authApi) signUp(service *services.AuthService, res authResponse, req authRequest) error {
+	sireq := req.SignInRequest()
 
-type AuthSignInReply struct {
-	*services.SignInResponse
-}
-
-func (self *AuthApi) SignIn(r *http.Request, args *AuthSignInArgs, reply *AuthSignInReply) error {
-	res, err := self.authService.SignIn(args.Email, args.Password)
-
-	reply.SignInResponse = res
+	_, err := service.RegisterUser(sireq.Email, sireq.Password)
 
 	return err
 }
 
-type AuthRegisterArgs struct {
+type signInRequest struct {
 	Email    string
 	Password string
 }
 
-type AuthRegisterReply struct {
-}
+func (req authRequest) SignInRequest() *signInRequest {
+	sireq := &signInRequest{}
 
-func (self *AuthApi) Register(r *http.Request, args *AuthRegisterArgs, reply *AuthRegisterReply) error {
-	_, err := self.authService.RegisterUser(args.Email, args.Password)
-	return err
+	if err := req.DecodeJsonPayload(&sireq); err != nil {
+		panic(err)
+	}
+
+	return sireq
 }

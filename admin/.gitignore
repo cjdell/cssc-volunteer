@@ -1,2 +1,2 @@
-/dist
-!/dist/app.js
+/dist/*
+!/dist/stub.js

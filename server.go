@@ -6,8 +6,6 @@ import (
 	"cssc/handlers"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/rpc"
-	"github.com/gorilla/rpc/json"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
@@ -37,13 +35,9 @@ func openDatabase() (*sqlx.DB, error) {
 }
 
 func startServer(db *sqlx.DB) {
-	// Configure JSON-RPC based API (For auth, doesn't require authentication)
-	authApiServer := rpc.NewServer()
+	http.Handle("/auth/", http.StripPrefix("/auth", api.NewAuthApi(db)))
 
-	authApiServer.RegisterCodec(json.NewCodec(), "application/json")
-	authApiServer.RegisterService(api.NewAuthApi(db), "")
-
-	http.Handle("/auth", authApiServer)
+	// ----------------------------------------------------------------
 
 	apiRouter := mux.NewRouter()
 
@@ -57,7 +51,16 @@ func startServer(db *sqlx.DB) {
 	apiRouter.Handle("/users", userApi)
 	apiRouter.Handle("/users/{id:[0-9]+}", userApi)
 
+	// GENERATOR INJECT
+
+	sampleEntityApi := http.StripPrefix("/sample_entities", api.NewSampleEntityApi(db))
+
+	apiRouter.Handle("/sample_entities", sampleEntityApi)
+	apiRouter.Handle("/sample_entities/{id:[0-9]+}", sampleEntityApi)
+
 	http.Handle("/api/", http.StripPrefix("/api", handlers.CheckUser(apiRouter, db, false)))
+
+	// ----------------------------------------------------------------
 
 	// Configure handlers
 	dynamicHandler := mux.NewRouter()
@@ -67,9 +70,10 @@ func startServer(db *sqlx.DB) {
 	dynamicHandler.Handle("/", appHandlers.HomeHandler())
 	dynamicHandler.Handle("/test", appHandlers.TestHandler())
 	dynamicHandler.Handle("/upload", appHandlers.UploadHandler())
-	dynamicHandler.Handle("/{handle}", appHandlers.HomeHandler())
 
 	http.Handle("/", dynamicHandler)
+
+	// ----------------------------------------------------------------
 
 	// Assets
 	assetHandler := http.FileServer(http.Dir(config.App.AssetRoot()))
@@ -82,6 +86,8 @@ func startServer(db *sqlx.DB) {
 	// Mobile
 	mobileHandler := http.FileServer(http.Dir("ionic/www"))
 	http.Handle("/mobile/", http.StripPrefix("/mobile/", mobileHandler))
+
+	// ----------------------------------------------------------------
 
 	fmt.Printf("Starting server on port %s using Env: %s\n", config.App.ListenAddress(), config.App.Env())
 

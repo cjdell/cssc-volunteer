@@ -11,19 +11,19 @@ module.exports = ['$http', 'Restangular',
         SingularSnakeCase: 'user',
         PluralSnakeCase: 'users'
       },
-      GetAll: function(args) {
+      getAll: function(args) {
         return service.getList();
       },
-      GetOne: function(id) {
+      getOne: function(id) {
         return service.one(id).get();
       },
-      Post: function(user) {
+      post: function(user) {
         return service.post(user);
       },
-      Put: function(user) {
+      put: function(user) {
         return user.put();
       },
-      Delete: function(user) {
+      delete: function(user) {
         return user.remove();
       }
     };

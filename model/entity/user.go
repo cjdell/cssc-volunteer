@@ -14,12 +14,18 @@ func (self User) GetId() int64 {
 	return self.Id
 }
 
-func (self *User) SetId(id int64) {
-	self.Id = id
-}
+func (self *User) Merge(update *User, fields []string) error {
+	if contains(fields, "Type") {
+		self.Type = update.Type
+	}
 
-func (self *User) Update(update *User) {
-	self.Type = update.Type
-	self.Name = update.Name
-	self.Email = update.Email
+	if contains(fields, "Name") {
+		self.Name = update.Name
+	}
+
+	if contains(fields, "Email") {
+		self.Email = update.Email
+	}
+
+	return nil
 }

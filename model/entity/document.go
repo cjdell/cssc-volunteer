@@ -17,11 +17,7 @@ func (self *Document) GetId() int64 {
 	return self.Id
 }
 
-func (self *Document) SetId(id int64) {
-	self.Id = id
-}
-
-func (self *Document) Update(update *Document, fields []string) {
+func (self *Document) Merge(update *Document, fields []string) error {
 	if contains(fields, "Name") {
 		self.Name = update.Name
 	}
@@ -29,13 +25,6 @@ func (self *Document) Update(update *Document, fields []string) {
 	if contains(fields, "Description") {
 		self.Description = update.Description
 	}
-}
 
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
+	return nil
 }

@@ -314,39 +314,39 @@ h1.logo {
         border-bottom: solid 1px #999;
         overflow: hidden;
 
-        display: -webkit-flex; /* Safari */
-        display: flex;
-        -webkit-align-items: center; /* Safari 7.0+ */
-        align-items: center;
+        &.flex {
+            display: -webkit-flex; /* Safari */
+            display: flex;
+            -webkit-align-items: center; /* Safari 7.0+ */
+            align-items: center;
+        }
 
         &:hover {
                 background: #ddd;
         }
 
         .thumb {
-            padding: 12px 0 12px 12px;
+            margin-right: 12px;
 
             img {
                 display: block;
             }
         }
 
-        .item-inner {
-            padding: 12px;
+        padding: 12px;
 
-            & > * {
-                line-height: 32px;
-                margin: 0;
-            }
-            .item-title {
+        & > *, .titles > * {
+            line-height: 32px;
+            margin: 0;
+        }
+        .item-title {
 
-            }
-            .item-subtitle {
+        }
+        .item-subtitle {
 
-            }
-            .item-summary {
+        }
+        .item-summary {
 
-            }
         }
     }
 }

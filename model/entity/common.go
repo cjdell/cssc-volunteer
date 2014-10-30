@@ -7,7 +7,6 @@ import (
 
 type Entity interface {
 	GetId() int64
-	SetId(id int64)
 }
 
 func GetDbTable(entityType reflect.Type) string {
@@ -60,4 +59,13 @@ func GetDbColumnValues(entity Entity) map[string]interface{} {
 	}
 
 	return fieldValues
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

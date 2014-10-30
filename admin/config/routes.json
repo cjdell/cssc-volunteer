@@ -76,5 +76,30 @@
     "controller": "DocumentController",
     "templateUrl": "views/documents/view.html",
     "url": "/{id:[0-9]+}"
+  },
+  "records.sample_entities": {
+    "abstract": true,
+    "allow": [
+      "Admin"
+    ],
+    "controller": "SampleEntitiesController",
+    "templateUrl": "views/sample_entities/index.html",
+    "url": "/sample_entities"
+  },
+  "records.sample_entities.new": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "SampleEntityController",
+    "templateUrl": "views/sample_entities/view.html",
+    "url": "/new"
+  },
+  "records.sample_entities.view": {
+    "allow": [
+      "Admin"
+    ],
+    "controller": "SampleEntityController",
+    "templateUrl": "views/sample_entities/view.html",
+    "url": "/{id:[0-9]+}"
   }
 }

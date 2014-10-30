@@ -25,6 +25,8 @@ app.factory('Utility', require('./services/utility'));
 app.factory('AuthApi', require('./api/auth'));
 app.factory('UserApi', require('./api/user'));
 app.factory('DocumentApi', require('./api/document'));
+// GENERATOR INJECT API
+app.factory('SampleEntityApi', require('./api/sample_entity'));
 
 /* DIRECTIVES
 -------------------------------- */
@@ -37,18 +39,27 @@ app.directive('tinyMce', require('./directives/tiny_mce'));
 
 /* CONTROLLERS
 -------------------------------- */
-var AuthControllers = require('./controllers/auth'),
-  UserControllers = require('./controllers/user'),
-  DocumentControllers = require('./controllers/document');
+var AuthControllers = require('./controllers/auth');
 
 app.controller('SignInController', AuthControllers.SignInController);
 app.controller('RegisterController', AuthControllers.RegisterController);
 
+var UserControllers = require('./controllers/user');
+
 app.controller('UsersController', UserControllers.UsersController);
 app.controller('UserController', UserControllers.UserController);
 
+var DocumentControllers = require('./controllers/document');
+
 app.controller('DocumentsController', DocumentControllers.DocumentsController);
 app.controller('DocumentController', DocumentControllers.DocumentController);
+
+// GENERATOR INJECT CTRL
+
+var SampleEntityControllers = require('./controllers/sample_entity');
+
+app.controller('SampleEntitiesController', SampleEntityControllers.SampleEntitiesController);
+app.controller('SampleEntityController', SampleEntityControllers.SampleEntityController);
 
 app.run(require('./run/auth'));
 app.run(require('./run/item_count'));
@@ -57,9 +68,8 @@ app.run(require('./run/promise'));
 app.run(require('./run/state_class'));
 
 app.config(require('./config/http'));
-app.config(require('./config/router'));
-
 app.config(require('./config/restangular'));
+app.config(require('./config/router'));
 
 // Manual Angular bootstrap call, less magic
 angular.bootstrap(window.document.body, ['go-angular-starter']);

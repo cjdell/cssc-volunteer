@@ -7,7 +7,7 @@ module.exports = ['$http', 'AuthApi',
         return user !== null;
       },
       signIn: function(email, password) {
-        return AuthApi.SignIn(email, password).then(function(reply) {
+        return AuthApi.signIn(email, password).then(function(reply) {
           $http.defaults.headers.common['API-Key'] = reply.ApiKey;
 
           return user = {

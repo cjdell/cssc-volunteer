@@ -1,17 +1,11 @@
-module.exports = ['$http', '$q',
-  function($http, $q) {
+module.exports = ['$http', 'Restangular',
+  function($http, Restangular) {
     return {
-      SignIn: function(email, password) {
-        return $http.jsonrpc('/auth', 'AuthApi.SignIn', [{
-          Email: email,
-          Password: password
-        }]);
+      signIn: function(email, password) {
+        return Restangular.all('auth/sign-in').post({ Email: email, Password: password });
       },
-      Register: function(email, password) {
-        return $http.jsonrpc('/auth', 'AuthApi.Register', [{
-          Email: email,
-          Password: password
-        }]);
+      signUp: function(email, password) {
+        return Restangular.all('auth/sign-up').post({ Email: email, Password: password });
       }
     };
   }

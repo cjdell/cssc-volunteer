@@ -40,6 +40,11 @@ func NewQueryParametersWithId(id int64) QueryParameters {
 	return params
 }
 
+type NotFoundError struct {
+}
+
+func (NotFoundError) Error() string { return "Not found" }
+
 func (self commonPersister) getAll(ents interface{}, limit *Limit, where string, params QueryParameters) error {
 	var (
 		table   = entity.GetDbTable(self.entityType)
@@ -101,11 +106,6 @@ func (self commonPersister) getOne(ent entity.Entity, where string, params Query
 
 	return rows.StructScan(ent)
 }
-
-type NotFoundError struct {
-}
-
-func (NotFoundError) Error() string { return "Not found" }
 
 func (self commonPersister) insert(ent entity.Entity) (int64, error) {
 	var (

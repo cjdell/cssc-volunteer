@@ -1,7 +1,7 @@
 package api
 
 import (
-	"cssc/model/entity"
+	"cssc/model/persister"
 	"cssc/services"
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jmoiron/sqlx"
@@ -16,7 +16,7 @@ type (
 	userRequest  struct{ *rest.Request }
 	userResponse struct{ rest.ResponseWriter }
 
-	userHandler func(*services.UserService, userResponse, userRequest) error
+	userAction func(*services.UserService, userResponse, userRequest) error
 )
 
 func NewUserApi(db *sqlx.DB) http.Handler {
@@ -24,29 +24,26 @@ func NewUserApi(db *sqlx.DB) http.Handler {
 
 	handler := &rest.ResourceHandler{}
 
-	wrap := func(handler userHandler, db *sqlx.DB, requireUser bool) rest.HandlerFunc {
-		return rest.HandlerFunc(func(w rest.ResponseWriter, r *rest.Request) {
+	wrap := func(action userAction, db *sqlx.DB, requireUser bool) rest.HandlerFunc {
+		return transactionWrap(db, func(w rest.ResponseWriter, r *rest.Request, db persister.DB) error {
 			user := GetUser(r.Request)
 
 			if requireUser && user == nil {
-				rest.Error(w, "Authentication required", 401)
-				return
+				return AuthError{}
 			}
 
 			service := services.NewUserService(db, user)
 
-			if err := handler(service, userResponse{w}, userRequest{r}); err != nil {
-				rest.Error(w, err.Error(), http.StatusInternalServerError)
-			}
+			return action(service, userResponse{w}, userRequest{r})
 		})
 	}
 
 	err := handler.SetRoutes(
-		&rest.Route{"GET", "/", wrap(userHandler(api.getAll), db, false)},
-		&rest.Route{"GET", "/:id", wrap(userHandler(api.getOne), db, false)},
-		&rest.Route{"POST", "/", wrap(userHandler(api.post), db, true)},
-		&rest.Route{"PUT", "/:id", wrap(userHandler(api.put), db, true)},
-		&rest.Route{"DELETE", "/:id", wrap(userHandler(api.delete), db, true)},
+		&rest.Route{"GET", "/", wrap(userAction(api.getAll), db, false)},
+		&rest.Route{"GET", "/:id", wrap(userAction(api.getOne), db, false)},
+		&rest.Route{"POST", "/", wrap(userAction(api.post), db, true)},
+		&rest.Route{"PUT", "/:id", wrap(userAction(api.put), db, true)},
+		&rest.Route{"DELETE", "/:id", wrap(userAction(api.delete), db, true)},
 	)
 
 	if err != nil {
@@ -57,7 +54,7 @@ func NewUserApi(db *sqlx.DB) http.Handler {
 }
 
 func (userApi) getAll(service *services.UserService, res userResponse, req userRequest) error {
-	users, err := service.GetUsers(nil)
+	users, err := service.GetAll(nil)
 
 	if err != nil {
 		return err
@@ -67,7 +64,7 @@ func (userApi) getAll(service *services.UserService, res userResponse, req userR
 }
 
 func (userApi) getOne(service *services.UserService, res userResponse, req userRequest) error {
-	user, err := service.GetUserById(req.Id())
+	user, err := service.GetOne(req.Id())
 
 	if err != nil {
 		return err
@@ -78,10 +75,9 @@ func (userApi) getOne(service *services.UserService, res userResponse, req userR
 
 func (userApi) post(service *services.UserService, res userResponse, req userRequest) error {
 	var err error
+	var user *services.UserInfo
 
-	user := req.User()
-
-	if user, err = service.Insert(user); err != nil {
+	if user, err = service.Insert(req.User()); err != nil {
 		return err
 	}
 
@@ -90,11 +86,9 @@ func (userApi) post(service *services.UserService, res userResponse, req userReq
 
 func (userApi) put(service *services.UserService, res userResponse, req userRequest) error {
 	var err error
+	var user *services.UserInfo
 
-	user := req.User()
-	user.Id = req.Id()
-
-	if user, err = service.Update(user); err != nil {
+	if user, err = service.Update(req.User()); err != nil {
 		return err
 	}
 
@@ -121,20 +115,24 @@ func (req userRequest) Id() int64 {
 	return id
 }
 
-func (req userRequest) User() *entity.User {
-	user := &entity.User{}
+func (req userRequest) User() *services.UserChanges {
+	user := &services.UserChanges{}
 
 	if err := req.DecodeJsonPayload(&user); err != nil {
 		panic(err)
 	}
 
+	if req.Id() != -1 {
+		user.Id = req.Id()
+	}
+
 	return user
 }
 
-func (res userResponse) WriteUsers(users []*entity.User) error {
+func (res userResponse) WriteUsers(users []*services.UserInfo) error {
 	return res.WriteJson(users)
 }
 
-func (res userResponse) WriteUser(user *entity.User) error {
+func (res userResponse) WriteUser(user *services.UserInfo) error {
 	return res.WriteJson(user)
 }
