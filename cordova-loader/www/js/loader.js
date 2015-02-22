@@ -1,6 +1,6 @@
 (function() {
 
-  var UPDATE_BASE_URL = 'http://cssc-volunteer.chrisdell.info/ionic';
+  var UPDATE_BASE_URL = 'http://cssc-volunteer.chrisdell.info/ionic/build/ios';
 
   var isCordova = typeof cordova !== 'undefined';
 

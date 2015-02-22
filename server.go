@@ -79,8 +79,8 @@ func startServer(db *sqlx.DB) {
 	http.Handle("/admin/", http.StripPrefix("/admin/", adminHandler))
 
 	// Mobile
-	mobileHandler := http.FileServer(http.Dir("ionic/www"))
-	http.Handle("/mobile/", http.StripPrefix("/mobile/", mobileHandler))
+	mobileHandler := http.FileServer(http.Dir("ionic"))
+	http.Handle("/ionic/", http.StripPrefix("/ionic/", mobileHandler))
 
 	// ----------------------------------------------------------------
 
