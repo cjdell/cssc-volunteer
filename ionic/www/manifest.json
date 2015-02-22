@@ -1,0 +1,62 @@
+{
+  "files": {
+    "index.html": {
+      "version": ""
+    },
+    "lib/ionic/js/ionic.bundle.js": {
+      "version": ""
+    },
+    "lib/underscore-min.js": {
+      "version": ""
+    },
+    "lib/restangular.js": {
+      "version": ""
+    },
+    "js/config.js": {
+      "version": ""
+    },
+    "js/services.js": {
+      "version": ""
+    },
+    "js/controllers.js": {
+      "version": ""
+    },
+    "js/app.js": {
+      "version": ""
+    },
+    "js/io.js": {
+      "version": ""
+    },
+    "js/platform.js": {
+      "version": ""
+    },
+    "lib/ionic/fonts/ionicons.ttf": {
+      "version": ""
+    },
+    "css/ionic.app.css": {
+      "version": ""
+    },
+    "templates/body.html": {
+      "version": ""
+    },
+    "templates/document-detail.html": {
+      "version": ""
+    },
+    "templates/sign-in.html": {
+      "version": ""
+    },
+    "templates/tab-account.html": {
+      "version": ""
+    },
+    "templates/tab-dash.html": {
+      "version": ""
+    },
+    "templates/tab-documents.html": {
+      "version": ""
+    },
+    "templates/tabs.html": {
+      "version": ""
+    }
+  },
+  "version": ""
+}

@@ -1,0 +1,16 @@
+{
+  "name": "cordova-loader",
+  "description": "Cordova Loader - At the moment this exists purely for Gulp",
+  "version": "0.0.1",
+  "dependencies": {},
+  "devDependencies": {
+    "event-stream": "~3.1.5",
+    "gulp": "~3.6.2",
+    "gulp-cordova-generate-resources": "^0.0.1",
+    "gulp-gm": "0.0.7",
+    "gulp-if": "0.0.5",
+    "gulp-rename": "~1.2.0",
+    "gulp-replace": "~0.2.0",
+    "gulp-util": "~2.2.14"
+  }
+}

@@ -1,12 +1,12 @@
 <ion-view title="Documents">
   <ion-content>
     <div class="list">
-      <a class="item item-thumbnail-left item-button-right" ng-repeat="document in documents" href="#/tab/document/{{document.Id}}">
-        <img ng-repeat="image in document.Images" ng-src="{{image.Thumbs.TinySrc}}" />
+      <a class="item item-thumbnail-left" ng-repeat="document in documents | orderBy:'Id'" ui-sref="tab.document-detail({ documentId: document.Id })">
+        <img ng-src="{{getDeviceUrl(document.ThumbPath)}}" />
         {{document.Name}}
-        <button ng-repeat="attachment in document.Attachments" class="button button-positive" ng-click="downloadAttachment(attachment)">
+        <!-- <button ng-if="document.AttachmentPath" class="button button-positive" ng-click="downloadAttachment(document)">
           <i class="icon ion-ios7-download"></i>
-        </button>
+        </button> -->
       </a>
     </div>
   </ion-content>

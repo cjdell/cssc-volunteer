@@ -12,7 +12,7 @@ var SignInController = ['$scope', '$state', '$stateParams', 'Authenticator',
         return;
       }
 
-      Authenticator.signIn($scope.user.email, $scope.user.password).then(signedIn, failed);
+      Authenticator.signIn($scope.user.email, $scope.user.password).then(signedIn, $scope.errorHandler);
     };
 
     $scope.setAdmin = function() {
@@ -34,10 +34,6 @@ var SignInController = ['$scope', '$state', '$stateParams', 'Authenticator',
         $state.go($stateParams.attemptedStateName, JSON.parse(atob(decodeURI($stateParams.attemptedStateParams))));
       else
         $state.go('dashboard');
-    }
-
-    function failed(error) {
-      alert(error);
     }
   }
 ];

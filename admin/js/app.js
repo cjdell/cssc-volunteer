@@ -26,7 +26,6 @@ app.factory('AuthApi', require('./api/auth'));
 app.factory('UserApi', require('./api/user'));
 app.factory('DocumentApi', require('./api/document'));
 // GENERATOR INJECT API
-app.factory('SampleEntityApi', require('./api/sample_entity'));
 
 /* DIRECTIVES
 -------------------------------- */
@@ -56,12 +55,8 @@ app.controller('DocumentController', DocumentControllers.DocumentController);
 
 // GENERATOR INJECT CTRL
 
-var SampleEntityControllers = require('./controllers/sample_entity');
-
-app.controller('SampleEntitiesController', SampleEntityControllers.SampleEntitiesController);
-app.controller('SampleEntityController', SampleEntityControllers.SampleEntityController);
-
 app.run(require('./run/auth'));
+app.run(require('./run/error'));
 app.run(require('./run/item_count'));
 app.run(require('./run/permissions'));
 app.run(require('./run/promise'));

@@ -37,7 +37,7 @@ module.exports = ['$q', 'Uploader', 'Utility',
           var fileId = Utility.guid();
 
           var promise = Uploader.uploadBlob(changeEvent.target.files[0], fileId).then(function(savedFileName) {
-            scope.fileUploadIndicator = "Upload Complete";
+            scope.fileUploadIndicator = "Upload complete, ready to save";
             scope.uploading = false;
 
             return savedFileName;

@@ -40,7 +40,7 @@ func GetAttachments(attachable Attachable) ([]*Attachment, error) {
 
 	files, _ := ioutil.ReadDir(attachableFolder.Abs())
 
-	var attachments []*Attachment
+	attachments := make([]*Attachment, 0)
 
 	for _, f := range files {
 		if f.Name()[0] == '.' || f.IsDir() {

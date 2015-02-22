@@ -112,14 +112,12 @@ h1.logo {
 ================================================================================================================================ */
 .file-upload {
     .upload-indicator {
-        transition: all 2s;
-
         &.uploading {
-            opacity: 1;
+
         }
 
         &.not-uploading {
-            opacity: 0;
+
         }
     }
 }

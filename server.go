@@ -53,11 +53,6 @@ func startServer(db *sqlx.DB) {
 
 	// GENERATOR INJECT
 
-	sampleEntityApi := http.StripPrefix("/sample_entities", api.NewSampleEntityApi(db))
-
-	apiRouter.Handle("/sample_entities", sampleEntityApi)
-	apiRouter.Handle("/sample_entities/{id:[0-9]+}", sampleEntityApi)
-
 	http.Handle("/api/", http.StripPrefix("/api", handlers.CheckUser(apiRouter, db, false)))
 
 	// ----------------------------------------------------------------

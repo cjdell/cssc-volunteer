@@ -93,9 +93,9 @@ func (self *DocumentService) Update(documentChanges *DocumentChanges) (*Document
 		return nil, err
 	}
 
-	if documentChanges.Changes.NewAttachmentFileName != "" {
-		document.Version++
-	}
+	//if documentChanges.Changes.NewAttachmentFileName != "" {
+	document.Version++
+	//}
 
 	if err = self.persister.Update(document); err != nil {
 		return nil, err

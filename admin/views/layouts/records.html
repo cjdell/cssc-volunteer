@@ -11,9 +11,6 @@
                 <a ui-sref="records.documents.new">Documents<span class="count" ng-show="itemCounts.Document"> ({{itemCounts.Document}})</span></a>
             </li>
             <!-- GENERATOR INJECT -->
-<li ng-show="canView('SampleEntity')">
-    <a ui-sref="records.sample_entities.new">SampleEntities<span class="count" ng-show="itemCounts.SampleEntity"> ({{itemCounts.SampleEntity}})</span></a>
-</li>
             <li>
                 <p>Signed in as <strong>{{getUser().Name}} ({{getUser().Type}})</strong></p>
             </li>

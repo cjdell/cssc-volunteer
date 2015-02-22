@@ -116,7 +116,7 @@ func GetImages(imageable Imageable) ([]*Image, error) {
 
 	files, _ := ioutil.ReadDir(imageableFolder.Abs())
 
-	var images []*Image
+	images := make([]*Image, 0, 0)
 
 	for _, f := range files {
 		if f.Name()[0] == '.' || f.IsDir() {

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="info.chrisdell.cssc-volunteer" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>CSSC Volunteer</name>
+    <description>
+      CSSC Volunteer
+    </description>
+    <author email="me@chrisdell.info" href="http://chrisdell.info/">
+      Christopher Dell Web Solutions
+    </author>
+    <content src="loader.html" />
+    <access origin="*" />
+</widget>

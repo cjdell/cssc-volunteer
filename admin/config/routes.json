@@ -22,7 +22,7 @@
     "abstract": true,
     "allow": [
       "Admin",
-      "Business"
+      "Client"
     ],
     "templateUrl": "views/layouts/records.html",
     "url": "/records"
@@ -30,7 +30,8 @@
   "records.users": {
     "abstract": true,
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "UsersController",
     "templateUrl": "views/users/index.html",
@@ -38,7 +39,8 @@
   },
   "records.users.new": {
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "UserController",
     "templateUrl": "views/users/view.html",
@@ -46,7 +48,8 @@
   },
   "records.users.view": {
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "UserController",
     "templateUrl": "views/users/view.html",
@@ -55,7 +58,8 @@
   "records.documents": {
     "abstract": true,
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "DocumentsController",
     "templateUrl": "views/documents/index.html",
@@ -63,7 +67,8 @@
   },
   "records.documents.new": {
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "DocumentController",
     "templateUrl": "views/documents/view.html",
@@ -71,35 +76,11 @@
   },
   "records.documents.view": {
     "allow": [
-      "Admin"
+      "Admin",
+      "Client"
     ],
     "controller": "DocumentController",
     "templateUrl": "views/documents/view.html",
-    "url": "/{id:[0-9]+}"
-  },
-  "records.sample_entities": {
-    "abstract": true,
-    "allow": [
-      "Admin"
-    ],
-    "controller": "SampleEntitiesController",
-    "templateUrl": "views/sample_entities/index.html",
-    "url": "/sample_entities"
-  },
-  "records.sample_entities.new": {
-    "allow": [
-      "Admin"
-    ],
-    "controller": "SampleEntityController",
-    "templateUrl": "views/sample_entities/view.html",
-    "url": "/new"
-  },
-  "records.sample_entities.view": {
-    "allow": [
-      "Admin"
-    ],
-    "controller": "SampleEntityController",
-    "templateUrl": "views/sample_entities/view.html",
     "url": "/{id:[0-9]+}"
   }
 }

@@ -1,5 +1,10 @@
 package entity
 
+import (
+	"crypto/md5"
+	"encoding/hex"
+)
+
 type User struct {
 	__table struct{} `db:"users"`
 
@@ -28,4 +33,10 @@ func (self *User) Merge(update *User, fields []string) error {
 	}
 
 	return nil
+}
+
+func (self *User) SetPassword(password string) {
+	hasher := md5.New()
+	hasher.Write([]byte(password))
+	self.Hash = hex.EncodeToString(hasher.Sum(nil))
 }

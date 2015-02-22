@@ -24,12 +24,18 @@ func NewDocumentApi(db *sqlx.DB) http.Handler {
 
 	handler := &rest.ResourceHandler{}
 
-	wrap := func(action documentAction, db *sqlx.DB, requireUser bool) rest.HandlerFunc {
+	wrap := func(action documentAction, db *sqlx.DB, requireUserType string) rest.HandlerFunc {
 		return transactionWrap(db, func(w rest.ResponseWriter, r *rest.Request, db persister.DB) error {
 			user := GetUser(r.Request)
 
-			if requireUser && user == nil {
-				return AuthError{}
+			if requireUserType != "" {
+				if user == nil {
+					return AuthError{}
+				}
+
+				if user.Type != "Admin" && user.Type != requireUserType {
+					return AuthError{}
+				}
 			}
 
 			service := services.NewDocumentService(db, user)
@@ -39,11 +45,11 @@ func NewDocumentApi(db *sqlx.DB) http.Handler {
 	}
 
 	err := handler.SetRoutes(
-		&rest.Route{"GET", "/", wrap(documentAction(api.getAll), db, false)},
-		&rest.Route{"GET", "/:id", wrap(documentAction(api.getOne), db, false)},
-		&rest.Route{"POST", "/", wrap(documentAction(api.post), db, true)},
-		&rest.Route{"PUT", "/:id", wrap(documentAction(api.put), db, true)},
-		&rest.Route{"DELETE", "/:id", wrap(documentAction(api.delete), db, true)},
+		&rest.Route{"GET", "/", wrap(documentAction(api.getAll), db, "Client")},
+		&rest.Route{"GET", "/:id", wrap(documentAction(api.getOne), db, "Client")},
+		&rest.Route{"POST", "/", wrap(documentAction(api.post), db, "Admin")},
+		&rest.Route{"PUT", "/:id", wrap(documentAction(api.put), db, "Admin")},
+		&rest.Route{"DELETE", "/:id", wrap(documentAction(api.delete), db, "Admin")},
 	)
 
 	if err != nil {

@@ -13,6 +13,8 @@ module.exports = ['$rootScope', '$state', 'Authenticator',
 
       // Check user is authenticated...
       if (!allowed) {
+        console.error('Access denied. Current user type:', userType, ', Allowed types:', toState.allow);
+
         // Log the state we were attepting to access
         toParams.attemptedStateParams = encodeURI(btoa(JSON.stringify(toParams)));
         toParams.attemptedStateName = toState.name;

@@ -1,7 +1,7 @@
 <ion-view title="{{document.Name}}">
   <ion-content has-header="true" padding="true">
-    <button ng-repeat="attachment in document.Attachments" class="button button-block button-stable icon-left ion-ios7-download download-document" ng-click="downloadAttachment(attachment)">
-      Download {{attachment.Name}}
+    <button ng-if="document.AttachmentPath" class="button button-block button-stable icon-left ion-ios7-download download-document" ng-click="downloadAttachment()">
+      Download Document
     </button>
 
     <p style="white-space: pre;">{{document.Description}}</p>
